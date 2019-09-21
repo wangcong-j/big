@@ -26,13 +26,50 @@
                 <input type="text" class="input_txt" placeholder="邮箱/手机号">
                 <input type="password" class="input_pass" placeholder="密码">
                 <!-- <input type="submit" class="input_sub" value="登 录"> -->
-                <input type="button" value="登 录" class="input_sub" >
+                <input type="button" value="登 录" class="input_sub register" >
             </form>
         </div>
 
     </div> 
-    
+
+
+
+
+
+
+
+
+
+    <script src="./js/jquery-1.12.4.min.js"></script>
+
+
+<script>
+
+    // 给登录按钮注册点击事件
+    $('.register').click(function(){
+        var input_txt = $('.input_txt').val();
+        var input_pass = $('.input_pass').val();
+        console.log(input_txt,input_pass);
+        // 用户登录
+        $.ajax({
+            url:'http://localhost:8000/admin/login',
+            type:'post',
+            data:{user_name:input_txt,password:input_pass},
+            success: function(res){
+                console.log(res);
+                if(res.code = 200){
+                    window.location.href = '/web_front/index.html';
+                }
+            }
+        })
+    })
+
+
+
+
+</script>
 </body>
+
 
 
 
