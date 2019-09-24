@@ -52,7 +52,7 @@
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-center">
-                            <a href="#" class="btn btn-success" data-toggle="modal" data-target="#addModal">新增分类</a>
+                            <a href="javascript:;" class="btn btn-success newCreate" >新增分类</a>
                         </td>
                     </tr>
                 </tfoot>
@@ -65,7 +65,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
-              <h4 class="modal-title">新增分类</h4>
+              <h4 class="modal-title mytitle">新增分类</h4>
             </div>
             <div class="modal-body">
               <form>
@@ -101,12 +101,7 @@
           //   $('#addModal').modal('hide');
           // });
 
-          $('.category_table').delegate('a','click',function(){
-              if($(this).hasClass('btn-info')){
-                $('#addModal .modal-title').html('修改分类名称');
-                $('#addModal').modal('show');
-              }
-          })      
+        
       </script>
 
 
@@ -123,9 +118,9 @@
             <td class="td1" data-Id="{{item.name}}" >{{item.name}}</td>
             <td class="td2" data-Id="{{item.slug}}" >{{item.slug}}</td>
             <td class="text-center">
-                <a href="javascript:editTr({&quot;id&quot;:&quot;4&quot;,&quot;slug&quot;:&quot;travel&quot;,&quot;name&quot;:&quot; {{item.name}}  &quot;});"
-                    class="btn btn-info btn-xs">编辑</a>
-                <a href="javascript:deleteTr( 4 );" class="btn btn-danger btn-xs">删除</a>
+                <a href="javascript:;"
+                    class="btn btn-info btn-xs edit" data-name='{{item.name}}' data-set='{{item.slug}}' data-id='{{item.id}}'>编辑</a>
+                <a href="javascript:;"  class="btn btn-danger btn-xs abcd" data_iddel='{{item.id}}' >删除</a>
             </td>
         </tr>
 
@@ -135,7 +130,7 @@
 
 
       <script>
-
+        var flag = '';
         // 文章类别搜索
         var abc = function(){
           leibie.search(function(res){
@@ -145,13 +140,47 @@
             $('#tbody').html(temp);
           }
         })
-        }
+        };
         abc();
-      
+        
+        $('.newCreate').click(function(){
+          flag = '新增';
+          $('.modal-title').text('新增分类');
+          $('#model_add').text('新增');
+          $('#addModal').modal('show');
+        })
+        // 事件委托   找编辑   和  删除
+        $('tbody').on('click','.edit',function(){
+          flag = '编辑';
+          $('.mytitle').text('编辑');
+          $('#model_add').text('确认编辑');
+          $('#recipient-name1').val($(this).attr('data-name'));
+          $('#recipient-name2').val($(this).attr('data-set'));
+
+          window.id = $(this).attr('data-id');
+          $('#addModal').modal('show');
+        })
+
+        // 删除类别   事件委托 法
+        $('tbody').on('click','.abcd',function(){
+          var data_iddel = $(this).attr('data_iddel');
+          console.log(data_iddel);
+          leibie.delete(data_iddel,function(res){
+            if(res.code === 200){
+              alert('确定要删除吗？');
+            }
+            abc();
+          })
+        })
+
+
+
         // 点击模态框新增按钮 新增文章类别
         $('#model_add').click(function(){
           var name  = $('#recipient-name1').val();
           var slug  = $('#recipient-name2').val();
+          // 新增文章类别
+         if(flag === '新增'){
           console.log(name,slug);
           if(name == ''|| slug == ''){
             alert('输入的内容不能为空！');
@@ -161,20 +190,45 @@
               console.log(res);
               if(res.code===200){
                 abc();
+                $('#recipient-name1').val('');
+                $('#recipient-name2').val('');
                 $('#addModal').modal('hide');
               }else{
                 alert(res.msg);
               }
           })
-        })
+         };
+
+         // 点击编辑按钮   实现编辑 
+          if(flag === '编辑'){
+            leibie.edit(window.id,name,slug ,function(res){
+              if(res.code===200){
+                abc();
+                $('#recipient-name1').val('');
+                $('#recipient-name2').val('');
+                window.id = null ;
+                $('#addModal').modal('hide');
+              }else{
+                alert(res.msg);
+              }
+          })
+         }
+        });
 
         
-        // 点击编辑按钮   实现编辑
-        
-      
-      
-      
-      </script>
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
 
 
 

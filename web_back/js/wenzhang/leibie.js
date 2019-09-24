@@ -19,12 +19,22 @@ var leibie = {
             }
         )
     },
-    // edit: function (id, name, slug, san) {
-    //     $.post(
-    //         url.edit,
-    //     )
-        
-    // }
+    edit: function (id, name, slug, san) {
+        $.post(
+            url.edit, { id, name, slug, }, function (res) {
+                san(res);
+            }
+        )
+    },
+    delete: function (id,san) {
+        $.post(
+            url.delete,
+            { id },
+            function (res) {
+                san(res);
+            }
+        )
+    }
 
     
 }
